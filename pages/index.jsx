@@ -6,7 +6,7 @@ import styles from '../styles/Home.module.css'
 
 export default function Home() {
   // Contract Address & ABI
-  const contractAddress = "0xDBa03676a2fBb6711CB652beF5B7416A53c1421D";
+  const contractAddress = "0x4b21f4aBff8bf825ad300FCfe30a15443E99D83C";
   const contractABI = abi.abi;
 
   // Component state
@@ -14,7 +14,7 @@ export default function Home() {
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [memos, setMemos] = useState([]);
-
+  const [price, setPrice] = useState("");
   const onNameChange = (event) => {
     setName(event.target.value);
   }
@@ -23,6 +23,9 @@ export default function Home() {
     setMessage(event.target.value);
   }
 
+  const onPriceChange = (event) => {
+    setPrice(event.target.value);
+  }
   // Wallet connection logic
   const isWalletConnected = async () => {
     try {
@@ -74,17 +77,33 @@ export default function Home() {
         );
 
         console.log("buying coffee..")
-        const coffeeTxn = await buyMeACoffee.buyCoffee(
-          name ? name : "anon",
-          message ? message : "Enjoy your coffee!",
-          {value: ethers.utils.parseEther("0.001")}
-        );
-
-        await coffeeTxn.wait();
-
-        console.log("mined ", coffeeTxn.hash);
-
-        console.log("coffee purchased!");
+        if (price === "0.001"){
+          const coffeeTxn = await buyMeACoffee.buyCoffee(
+            name ? name : "anon",
+            message ? message : "Enjoy your coffee!",
+            {value: ethers.utils.parseEther("0.001")}
+          );
+  
+          await coffeeTxn.wait();
+  
+          console.log("mined ", coffeeTxn.hash);
+  
+          console.log("coffee purchased!");
+        }
+        else {
+          const coffeeTxn = await buyMeACoffee.buyCoffee(
+            name ? name : "anon",
+            message ? message : "Enjoy your coffee!",
+            {value: ethers.utils.parseEther("0.003")}
+          );
+  
+          await coffeeTxn.wait();
+  
+          console.log("mined ", coffeeTxn.hash);
+  
+          console.log("coffee purchased!");
+        }
+        
 
         // Clear the form fields.
         setName("");
@@ -166,14 +185,14 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Buy Albert a Coffee!</title>
+        <title>Buy Sakal a Coffee!</title>
         <meta name="description" content="Tipping site" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Buy Albert a Coffee!
+          Buy Sakal a Coffee!
         </h1>
         
         {currentAccount ? (
@@ -193,9 +212,9 @@ export default function Home() {
                   />
               </div>
               <br/>
-              <div class="formgroup">
+              <div className="formgroup">
                 <label>
-                  Send Albert a message
+                  Send Sakal a message
                 </label>
                 <br/>
 
@@ -212,8 +231,20 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={buyCoffee}
+                  onChange={onPriceChange}
+                  value="0.001"
                 >
                   Send 1 Coffee for 0.001ETH
+                </button>
+              </div>
+              <div>
+                <button
+                  type="button"
+                  onClick={buyCoffee}
+                  onChange={onPriceChange}
+                  value="0.003"
+                >
+                  Send 3 Coffee for 0.003ETH
                 </button>
               </div>
             </form>
@@ -227,21 +258,15 @@ export default function Home() {
 
       {currentAccount && (memos.map((memo, idx) => {
         return (
-          <div key={idx} style={{border:"2px solid", "border-radius":"5px", padding: "5px", margin: "5px"}}>
-            <p style={{"font-weight":"bold"}}>"{memo.message}"</p>
+          <div key={idx} style={{border:"2px solid", "borderRadius":"5px", padding: "5px", margin: "5px"}}>
+            <p style={{"fontWeight":"bold"}}>"{memo.message}"</p>
             <p>From: {memo.name} at {memo.timestamp.toString()}</p>
           </div>
         )
       }))}
 
       <footer className={styles.footer}>
-        <a
-          href="https://alchemy.com/?a=roadtoweb3weektwo"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Created by @thatguyintech for Alchemy's Road to Web3 lesson two!
-        </a>
+        
       </footer>
     </div>
   )
