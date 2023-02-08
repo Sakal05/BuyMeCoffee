@@ -171,7 +171,6 @@ export default function Home() {
         contractABI,
         signer
       );
-
       buyMeACoffee.on("NewMemo", onNewMemo);
     }
 
@@ -198,7 +197,7 @@ export default function Home() {
         {currentAccount ? (
           <div>
             <form>
-              <div class="formgroup">
+              <div className="formgroup">
                 <label>
                   Name
                 </label>
